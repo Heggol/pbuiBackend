@@ -14,13 +14,7 @@ export interface FlowStep {
     action: string;
 }
 
-export interface PlayerInfo {
-    name: string;
-    image: string;
-}
-
 export interface PBState {
     songStates: SongStates;
     currentFlowStep: number;
-    playerInfo: PlayerInfo[];
 }

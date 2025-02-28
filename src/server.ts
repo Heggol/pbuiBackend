@@ -19,11 +19,7 @@ app.use(express.json());
 // initial state
 let currentState: PBState = {
     songStates: {},
-    currentFlowStep: 0,
-    playerInfo: [
-        { name: 'Player 1', image: '/images/Placeholder1.png' },
-        { name: 'Player 2', image: '/images/Placeholder2.png' }
-    ]
+    currentFlowStep: 0
 };
 
 app.get('/api/state', (req, res) => {
@@ -40,21 +36,9 @@ app.post('/api/reset', (req, res) => {
     currentState = {
         songStates: {},
         currentFlowStep: 0,
-        playerInfo: currentState.playerInfo
     };
     io.emit('state-reset');
     res.json({ success: true });
-});
-
-app.post('/api/players', (req, res) => {
-    const { players } = req.body;
-    if (Array.isArray(players) && players.length <= 2) {
-        currentState.playerInfo = players;
-        io.emit('players-updated', players);
-        res.json({ success: true });
-    } else {
-        res.status(400).json({ error: 'Invalid player data' });
-    }
 });
 
 // Socket.IO for real-time updates
@@ -73,9 +57,6 @@ function updateState(newState: Partial<PBState>) {
     }
     if (newState.currentFlowStep !== undefined) {
         currentState.currentFlowStep = newState.currentFlowStep;
-    }
-    if (newState.playerInfo) {
-        currentState.playerInfo = newState.playerInfo;
     }
     // Broadcast updates to all clients with a small delay
     setTimeout(() => {
