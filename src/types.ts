@@ -2,6 +2,7 @@ export interface SongState {
     status: string;
     player: number;
     step: number;
+    name: string
 }
 
 export interface SongStates {
