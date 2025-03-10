@@ -2,7 +2,7 @@ import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
-import { PBState, SongStates } from './types';
+import { PBState, Song_States } from './types';
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -20,8 +20,8 @@ app.use(express.json());
 
 // initial state
 let currentState: PBState = {
-    songStates: {},
-    currentFlowStep: 0
+    song_states: {},
+    current_flow_step: 0
 };
 
 app.get('/api/state', (req, res) => {
@@ -36,8 +36,8 @@ app.post('/api/update', (req, res) => {
 
 app.post('/api/reset', (req, res) => {
     currentState = {
-        songStates: {},
-        currentFlowStep: 0,
+        song_states: {},
+        current_flow_step: 0,
     };
     io.emit('state-reset');
     res.json({ success: true });
@@ -54,11 +54,11 @@ io.on('connection', (socket) => {
 });
 
 function updateState(newState: Partial<PBState>) {
-    if (newState.songStates) {
-        currentState.songStates = newState.songStates;
+    if (newState.song_states) {
+        currentState.song_states = newState.song_states;
     }
-    if (newState.currentFlowStep !== undefined) {
-        currentState.currentFlowStep = newState.currentFlowStep;
+    if (newState.current_flow_step !== undefined) {
+        currentState.current_flow_step = newState.current_flow_step;
     }
     // Broadcast updates to all clients with a small delay
     setTimeout(() => {
